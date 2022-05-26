@@ -3,6 +3,7 @@ import { Button, Form } from 'react-bootstrap';
 import Chart from 'react-apexcharts';
 
 import './styles.css';
+import { convert, getSymboles } from '../../services';
 
 const options = {
   chart: {},
@@ -45,10 +46,27 @@ const series = [
 
 const Converter = () => {
   const [filter, setFilter] = React.useState<'1Y' | '1M'>('1M');
-  const [from, setFrom] = React.useState('EURO');
+  const [from, setFrom] = React.useState('EUR');
   const [to, setTo] = React.useState('USD');
   const [fromAmount, setFromAmount] = React.useState(1);
-  const [toAmount, setToAmount] = React.useState(0.6);
+  const [toAmount, setToAmount] = React.useState(0);
+  const [amountToConvert, setAmountToConvert] = React.useState(fromAmount);
+  const [fieldToConvert, setFieldToConvert] = React.useState<'from' | 'to'>(
+    'from'
+  );
+  const [currencies, setCurrencies] = React.useState({});
+
+  React.useEffect(() => {
+    getSymboles().then((data) => setCurrencies(data.symbols ?? []));
+  }, []);
+
+  React.useEffect(() => {
+    convert(from, to, amountToConvert).then((data) =>
+      fieldToConvert === 'from'
+        ? setToAmount(data.result)
+        : setFromAmount(data.result)
+    );
+  }, [amountToConvert, from, to]);
 
   return (
     <div className="converter-container">
@@ -59,9 +77,17 @@ const Converter = () => {
         <form action="">
           <div className="convert-from">
             <Form.Control
-              type="text"
+              type="number"
               value={fromAmount}
-              onChange={(e) => setFromAmount(parseFloat(e.target.value))}
+              onChange={(e) => {
+                setFromAmount(
+                  e.target.value !== '' ? parseFloat(e.target.value) : 0
+                );
+                setFieldToConvert('from');
+                setAmountToConvert(
+                  e.target.value !== '' ? parseFloat(e.target.value) : 0
+                );
+              }}
             />
             <Form.Select
               aria-label="Default select example"
@@ -69,15 +95,26 @@ const Converter = () => {
               onChange={(e) => setFrom(e.target.value)}
             >
               <option>Open this select menu</option>
-              <option value="USD">USD</option>
-              <option value="EURO">EURO</option>
+              {Object.keys(currencies).map((currency) => (
+                <option key={`from-${currency}`} value={currency}>
+                  {currency}
+                </option>
+              ))}
             </Form.Select>
           </div>
           <div className="convert-from">
             <Form.Control
-              type="text"
+              type="number"
               value={toAmount}
-              onChange={(e) => setToAmount(parseFloat(e.target.value))}
+              onChange={(e) => {
+                setToAmount(
+                  e.target.value !== '' ? parseFloat(e.target.value) : 0
+                );
+                setFieldToConvert('to');
+                setAmountToConvert(
+                  e.target.value !== '' ? parseFloat(e.target.value) : 0
+                );
+              }}
             />
             <Form.Select
               aria-label="Default select example"
@@ -85,8 +122,11 @@ const Converter = () => {
               onChange={(e) => setTo(e.target.value)}
             >
               <option>Open this select menu</option>
-              <option value="USD">USD</option>
-              <option value="EURO">EURO</option>
+              {Object.keys(currencies).map((currency) => (
+                <option key={`to-${currency}`} value={currency}>
+                  {currency}
+                </option>
+              ))}
             </Form.Select>
           </div>
         </form>
