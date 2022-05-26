@@ -1,6 +1,10 @@
 import React from 'react';
-import './App.css';
+import Converter from './components/Converter/Converter';
 
-const App = () => <div className="App">Learn React</div>;
+const App = () => (
+  <div>
+    <Converter />
+  </div>
+);
 
 export default App;

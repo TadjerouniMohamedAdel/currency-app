@@ -1,0 +1,72 @@
+.converter-container {
+  width: 900px;
+  height: 350px;
+  display: flex;
+  padding: 15px 10px;
+  background-color: #202124;
+}
+
+.converter-container > div {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+}
+
+.converter-container .operating-side span:nth-child(1) {
+  color: #8b9fa3;
+  font-size: 17px;
+}
+.converter-container .operating-side span:nth-child(2) {
+  color: #e8eaec;
+  font-size: 40px;
+  margin-top: 12px;
+}
+.converter-container .operating-side span:nth-child(3) {
+  color: #8b9fa3;
+  font-size: 14px;
+  margin-top: 17px;
+}
+.converter-container .operating-side .convert-from {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+.converter-container .operating-side form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 18px;
+}
+.converter-container select:focus,
+.converter-container input:focus,
+.converter-container .filter-button:focus {
+  outline: none;
+  box-shadow: none;
+}
+.converter-container .operating-side select,
+.converter-container .operating-side input {
+  border-radius: 10px;
+  border-color: #8b9fa3;
+  background-color: transparent;
+  color: #8b9fa3;
+  height: 50px;
+}
+
+.converter-container .chart-side .filter-switcher {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  width: 100%;
+}
+.converter-container .chart-side .filter-switcher > button {
+  background-color: transparent;
+  border: none;
+  color: #8b9fa3;
+  transition: 0.5s;
+}
+.converter-container .chart-side .filter-switcher .filter-button.active {
+  background: rgba(51, 103, 214, 0.1);
+  color: #3367d6;
+  border-radius: 20px;
+}
