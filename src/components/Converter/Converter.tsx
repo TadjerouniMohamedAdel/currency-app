@@ -3,7 +3,8 @@ import { Button, Form } from 'react-bootstrap';
 import Chart from 'react-apexcharts';
 
 import './styles.css';
-import { convert, getSymboles } from '../../services';
+import { convert } from '../../services';
+import useGetCurrencies from '../../hooks/useGetCurrencies';
 
 const options = {
   chart: {},
@@ -54,18 +55,20 @@ const Converter = () => {
   const [fieldToConvert, setFieldToConvert] = React.useState<'from' | 'to'>(
     'from'
   );
-  const [currencies, setCurrencies] = React.useState({});
+  const { currencies, isLoading } = useGetCurrencies();
 
   React.useEffect(() => {
-    getSymboles().then((data) => setCurrencies(data.symbols ?? []));
-  }, []);
+    console.log(isLoading, currencies);
+  }, [isLoading]);
 
   React.useEffect(() => {
-    convert(from, to, amountToConvert).then((data) =>
-      fieldToConvert === 'from'
-        ? setToAmount(data.result)
-        : setFromAmount(data.result)
-    );
+    if (!isLoading) {
+      convert(from, to, amountToConvert).then((data) =>
+        fieldToConvert === 'from'
+          ? setToAmount(data.result)
+          : setFromAmount(data.result)
+      );
+    }
   }, [amountToConvert, from, to]);
 
   return (
